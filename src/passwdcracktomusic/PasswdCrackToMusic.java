@@ -323,6 +323,9 @@ public class PasswdCrackToMusic {
     public static void main(String[] args) {
         BruteForce myBrute = new BruteForce();
         String passwd = myBrute.bruteForce(3);
+        
+        MidiFile newMidiFile = new MidiFile();
+       
     }
     String charRange = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
