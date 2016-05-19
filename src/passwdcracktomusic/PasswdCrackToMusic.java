@@ -17,12 +17,13 @@ class Note {
     public Note(String value, int octave) {
         this.value = value;
         this.octave = octave;
+        
 
     }
 
     private String value;
     private int octave;
-
+    private int midiNote;
     /**
      * @return the value
      */
@@ -49,6 +50,20 @@ class Note {
      */
     public void setOctave(int octave) {
         this.octave = octave;
+    }
+
+    /**
+     * @return the midiNote
+     */
+    public int getMidiNote() {
+        return midiNote;
+    }
+
+    /**
+     * @param midiNote the midiNote to set
+     */
+    public void setMidiNote(int midiNote) {
+        this.midiNote = midiNote;
     }
 
 }

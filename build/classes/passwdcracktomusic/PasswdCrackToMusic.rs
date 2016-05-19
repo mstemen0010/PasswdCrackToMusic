@@ -1,4 +1,0 @@
-passwdcracktomusic.Note
-passwdcracktomusic.MusicScale
-passwdcracktomusic.PasswdCrackToMusic
-passwdcracktomusic.BruteForce
