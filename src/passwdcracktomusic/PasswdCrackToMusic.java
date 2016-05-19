@@ -14,15 +14,15 @@ import java.util.Stack;
  */
 class Note {
 
-    public Note(String value, int octave) {
+    public Note(String value, int octave, int midiBaseValue ) {
         this.value = value;
         this.octave = octave;
-        
-
+                
     }
 
     private String value;
     private int octave;
+    private int midiBaseValue; // the midi value based octave 0 (i.e. 21 = A0, 22 = Bb0, etc)
     private int midiNote;
     /**
      * @return the value
@@ -65,6 +65,8 @@ class Note {
     public void setMidiNote(int midiNote) {
         this.midiNote = midiNote;
     }
+    
+    
 
 }
 
