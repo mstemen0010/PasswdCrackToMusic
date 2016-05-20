@@ -13,13 +13,50 @@ import java.util.Stack;
  * @author matthew.stemen
  */
 class Note {
+    
+    enum NoteValue 
+    {
+        A(21),
+        B(23),
+        C(24),
+        D(26),
+        E(28),
+        F(29),
+        G(31);
+        private int val;
+        
+        NoteValue( int val )
+        {
+            this.val = val;
+        }
+    }
+        
+    
+    // Note is A octave 0 (A0) on PianoRoll
+    final private int baseMidiWholeNoteEvents[] =  {21, 23, 24, 26, 28, 29, 31};
+    final private int baseMidiHalfNoteEvent[] = {22, 25, 27, 30};
+    
+    private NoteValue myNoteValue = NoteValue.A;
+    
+    final static private int baseMidiNoteEventMult = 12;
 
-    public Note(String value, int octave, int midiBaseValue ) {
+    public Note(String value, int octave ) {
         this.value = value;
         this.octave = octave;
+        
+        if( value.contains("b") || value.contains("#"))
+        {
+            this.setHalfNote();
+        }
+        else
+        {
+            this.setWholeNote();
+        }
                 
     }
 
+    private boolean isWholeNote = false;
+    private boolean isHalfNote = false;
     private String value;
     private int octave;
     private int midiBaseValue; // the midi value based octave 0 (i.e. 21 = A0, 22 = Bb0, etc)
@@ -36,6 +73,39 @@ class Note {
      */
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    
+    private int getMidiNoteEventNumber()
+    {
+        // return a midi number based on the current note
+        int midiNoteEventNumber = -1;
+        
+       
+        
+        return midiNoteEventNumber;
+    }
+    
+    private int calcMidiNote()
+    {
+        int midiNoteResult = -1;
+        int relOctave = this.octave;
+        
+        
+        
+        return midiNoteResult;
+    }
+    
+    public void setWholeNote()
+    {
+        isWholeNote = true;
+        isHalfNote = false;
+    }
+    
+    public void setHalfNote()
+    {
+        isWholeNote = false;
+        isHalfNote = true;
     }
 
     /**
