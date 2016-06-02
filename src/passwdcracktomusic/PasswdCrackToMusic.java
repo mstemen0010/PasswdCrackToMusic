@@ -13,9 +13,8 @@ import java.util.Stack;
  * @author matthew.stemen
  */
 class Note {
-    
-    enum NoteValue 
-    {
+
+    enum NoteValue {
         A(21),
         B(23),
         C(24),
@@ -23,36 +22,82 @@ class Note {
         E(28),
         F(29),
         G(31);
-        private int val;
-        
-        NoteValue( int val )
-        {
-            this.val = val;
+        private int midiEventVal;
+
+        NoteValue(int val) {
+            this.midiEventVal = val;
+        }
+
+        public int getMidiNote() {
+            return this.midiEventVal;
         }
     }
-        
-    
+
     // Note is A octave 0 (A0) on PianoRoll
-    final private int baseMidiWholeNoteEvents[] =  {21, 23, 24, 26, 28, 29, 31};
+    final private int baseMidiWholeNoteEvents[] = {21, 23, 24, 26, 28, 29, 31};
     final private int baseMidiHalfNoteEvent[] = {22, 25, 27, 30};
-    
+
+    private int myMidiNoteEventValue = -1;
+
     private NoteValue myNoteValue = NoteValue.A;
-    
+
     final static private int baseMidiNoteEventMult = 12;
 
-    public Note(String value, int octave ) {
+    public Note(String value, int octave) {
         this.value = value;
         this.octave = octave;
-        
-        if( value.contains("b") || value.contains("#"))
-        {
+
+        if (value.contains("b") || value.contains("#")) {
             this.setHalfNote();
-        }
-        else
-        {
+        } else {
             this.setWholeNote();
         }
-                
+
+    }
+
+    public NoteValue parseNote(String noteToParse) {
+        boolean isSharp = false;
+        boolean isFlat = false;
+
+        if (noteToParse.length() > 2) {
+            return null;
+        }
+        if (noteToParse.contains("b")) {
+            this.value = noteToParse.split("b")[0];
+            isFlat = true;
+            this.setHalfNote();
+        } else if (noteToParse.contains("#")) {
+            this.value = noteToParse.split("#")[0];
+            isSharp = true;
+            this.setHalfNote();
+        } else {
+            this.value = noteToParse;
+            this.setWholeNote();
+        }
+
+        if (this.value.toUpperCase().equals("A")) {
+            myNoteValue = NoteValue.A;
+        } else if (this.value.toUpperCase().equals("B")) {
+            myNoteValue = NoteValue.B;
+        } else if (this.value.toUpperCase().equals("C")) {
+            myNoteValue = NoteValue.C;            
+        } else if (this.value.toUpperCase().equals("D")) {
+            myNoteValue = NoteValue.D;
+        } else if (this.value.toUpperCase().equals("E")) {
+            myNoteValue = NoteValue.E;
+        } else if (this.value.toUpperCase().equals("F")) {
+            myNoteValue = NoteValue.F;
+        } else if (this.value.toUpperCase().equals("G")) {
+            myNoteValue = NoteValue.G;
+        }
+        this.myMidiNoteEventValue = myNoteValue.ordinal();
+        if (isSharp) {
+            this.myMidiNoteEventValue++;
+        } else if (isFlat) {
+            this.myMidiNoteEventValue--;
+        }
+
+        return myNoteValue;
     }
 
     private boolean isWholeNote = false;
@@ -61,6 +106,7 @@ class Note {
     private int octave;
     private int midiBaseValue; // the midi value based octave 0 (i.e. 21 = A0, 22 = Bb0, etc)
     private int midiNote;
+
     /**
      * @return the value
      */
@@ -74,36 +120,54 @@ class Note {
     public void setValue(String value) {
         this.value = value;
     }
-    
-    
-    private int getMidiNoteEventNumber()
-    {
+
+    private void setNoteValue() {
+
+    }
+
+    private int getMidiNoteEventNumber() {
         // return a midi number based on the current note
         int midiNoteEventNumber = -1;
-        
-       
-        
+
+        switch (myNoteValue) {
+            case A:
+                midiNoteEventNumber = NoteValue.A.getMidiNote();
+                break;
+            case B:
+                midiNoteEventNumber = NoteValue.B.getMidiNote();
+                break;
+            case C:
+                midiNoteEventNumber = NoteValue.C.getMidiNote();
+                break;
+            case D:
+                midiNoteEventNumber = NoteValue.D.getMidiNote();
+                break;
+            case E:
+                midiNoteEventNumber = NoteValue.E.getMidiNote();
+                break;
+            case F:
+                midiNoteEventNumber = NoteValue.F.getMidiNote();
+                break;
+            case G:
+                midiNoteEventNumber = NoteValue.G.getMidiNote();
+                break;
+        }
         return midiNoteEventNumber;
     }
-    
-    private int calcMidiNote()
-    {
+
+    private int calcMidiNote() {
         int midiNoteResult = -1;
         int relOctave = this.octave;
-        
-        
-        
+
         return midiNoteResult;
     }
-    
-    public void setWholeNote()
-    {
+
+    public void setWholeNote() {
         isWholeNote = true;
         isHalfNote = false;
     }
-    
-    public void setHalfNote()
-    {
+
+    public void setHalfNote() {
         isWholeNote = false;
         isHalfNote = true;
     }
@@ -135,8 +199,6 @@ class Note {
     public void setMidiNote(int midiNote) {
         this.midiNote = midiNote;
     }
-    
-    
 
 }
 
@@ -146,7 +208,10 @@ class MusicScale<Note> extends Stack<Note> {
 
 class BruteForce {
 
+    StringBuilder phrase = new StringBuilder();
     PasswdCrackToMusic myPWCTM;
+    int iteration = 1;
+    int targetIteration = 79;
 
     public String bruteForce(int size) {
         if (myPWCTM == null) {
@@ -159,14 +224,26 @@ class BruteForce {
             finalPassword[i] = "";
         }
         String pass = "GUEST";
+        phrase = new StringBuilder();
+        // String val = computePermutations(size, password, 0, pass);
+        // System.out.println("Phrase = " + val );
+        //return val;
         return computePermutations(size, password, 0, pass);
+        
     }
 
     private String computePermutations(int size, int[] password, int position, String pass) {
         String testString = "";
         StringBuilder assemble = new StringBuilder();
         Note noteToUse = new Note("C", 0);
-
+        StringBuilder song = new StringBuilder();
+        if( iteration == targetIteration )
+        {
+            System.out.println("Iteration#" + iteration++ );
+        }
+        else{
+           iteration++; 
+        }
         for (int i = 0; i < 36; i++) {
             password[position] = i;
 
@@ -391,7 +468,12 @@ class BruteForce {
 
                 }
                 // System.out.println("Password is: " + assemble);
-                System.out.println(assemble);
+                if( iteration == targetIteration )
+                {
+                    phrase.append(assemble);
+                    song.append(phrase);
+                    System.out.println(assemble);
+                }
                 if (assemble.toString().equalsIgnoreCase(pass)) {
                     System.out.println("Password is: " + assemble);
                     break; //replace this with: return assemble;
@@ -401,7 +483,8 @@ class BruteForce {
             }
 
         }
-        return "";
+        // System.out.println("Song = "  + song.toString() );
+        return assemble.toString();
     }
 }
 
@@ -410,9 +493,9 @@ public class PasswdCrackToMusic {
     public static void main(String[] args) {
         BruteForce myBrute = new BruteForce();
         String passwd = myBrute.bruteForce(3);
-        
+
         MidiFile newMidiFile = new MidiFile();
-       
+
     }
     String charRange = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -434,15 +517,15 @@ public class PasswdCrackToMusic {
         int charPos = charRange.indexOf(charToConvert);
         int relativeNotePos = charPos % hexTonicScale.size();
         int relativeOctave = charPos / hexTonicScale.size();
-        if( relativeNotePos >= 7 )
-        {            
-            relativeNotePos = 0;            
+        if (relativeNotePos >= 7) {
+            relativeNotePos = 0;
         }
         // System.out.println("Relative pos is: " + relativeNotePos );
         // System.out.println("Mod value is: " + relativeNotePos);
         Note noteToSend = hexTonicScale.elementAt(relativeNotePos);
         noteToSend.setOctave(relativeOctave);
         retVal = noteToSend.getValue() + ":" + noteToSend.getOctave() + "~";
+        
         //  C E G♯and E♭ G B
         // we are using a hexatonic (8 note) scale... so mod by 8 first
         return retVal;
