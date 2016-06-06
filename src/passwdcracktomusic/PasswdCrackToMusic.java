@@ -225,8 +225,8 @@ class BruteForce {
         }
         String pass = "GUEST";
         phrase = new StringBuilder();
-        // String val = computePermutations(size, password, 0, pass);
-        // System.out.println("Phrase = " + val );
+        String val = computePermutations(size, password, 0, pass);
+        System.out.println("Phrase = " + val );
         //return val;
         return computePermutations(size, password, 0, pass);
         
@@ -237,7 +237,7 @@ class BruteForce {
         StringBuilder assemble = new StringBuilder();
         Note noteToUse = new Note("C", 0);
         StringBuilder song = new StringBuilder();
-        if( iteration == targetIteration )
+        if( iteration <= targetIteration )
         {
             System.out.println("Iteration#" + iteration++ );
         }
@@ -468,7 +468,7 @@ class BruteForce {
 
                 }
                 // System.out.println("Password is: " + assemble);
-                if( iteration == targetIteration )
+                if( iteration <= targetIteration )
                 {
                     phrase.append(assemble);
                     song.append(phrase);
