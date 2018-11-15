@@ -3,7 +3,7 @@
 
   (c)2011 Kevin Boone, all rights reserved
 */
-package passwdcracktomusic;
+package wms.passwdcracktomusic;
 
 import java.io.*;
 import java.util.*;

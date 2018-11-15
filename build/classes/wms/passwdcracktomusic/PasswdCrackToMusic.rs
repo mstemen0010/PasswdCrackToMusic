@@ -1,0 +1,2 @@
+wms.passwdcracktomusic.BruteForce
+wms.passwdcracktomusic.PasswdCrackToMusic

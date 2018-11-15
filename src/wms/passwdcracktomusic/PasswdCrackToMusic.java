@@ -3,457 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package passwdcracktomusic;
+package wms.passwdcracktomusic;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
-import java.util.Stack;
+import wms.code2music.MusicScale;
+import wms.code2music.MusicalPhrase;
+import wms.code2music.Note;
 
 /**
  *
  * @author matthew.stemen
  */
-
-class MusicalPhrase implements List<Note>
-{
-    Stack<Note> notes;
-    
-    public MusicalPhrase()
-    {
-        notes = new Stack<Note>();
-    }
-
-    public void parseFromString( String stringToParse, String delimiter )
-    {
-        String[] strArray = stringToParse.split(delimiter);
-        Iterator<String> it = Arrays.asList(strArray).iterator();
-        while( it.hasNext() )
-        {
-            String[] vals = it.next().split(":");
-            String noteVal = vals[0];
-            String noteOct = vals[1];
-            Note newNote = new Note(noteVal, Integer.parseInt(noteOct));  
-            newNote.setNoteValue();
-            this.add(newNote);
-        }
-    }
-    
-    public void printStack()
-    {
-        Iterator<Note> it = notes.iterator();
-        while( it.hasNext())
-        {
-            Note note = it.next();
-            System.out.println("orig Note= " + note.getValue() + " value=" + note.getNatValue() + " oct=" + note.getOctave() + " isNat=" + note.isWholeNote() + " midiEvent=" + note.getMidiEvent()+ " myNoteVal=" + note.getNoteValue() );
-        }
-    }
-    @Override
-    public int size() {
-        return notes.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return notes.empty();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return notes.contains(o);
-    }
-
-    @Override
-    public Iterator<Note> iterator() {
-        return notes.iterator();
-    }
-
-    @Override
-    public Object[] toArray() {
-        return notes.toArray();
-    }
-
-    @Override
-    public Object[] toArray(Object[] a) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public boolean containsAll(Collection c) {
-        return notes.containsAll(c);
-    }
-
-    @Override
-    public boolean addAll(Collection c) {
-        return notes.addAll(c);
-    }
-
-    @Override
-    public boolean addAll(int index, Collection c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean removeAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean retainAll(Collection c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void clear() {
-        notes.clear();
-    }
-
-    @Override
-    public Note get(int index) {
-        return notes.get(index);
-    }
-
-    @Override
-    public int indexOf(Object o) {
-        return notes.indexOf(o);
-    }
-
-    @Override
-    public int lastIndexOf(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ListIterator listIterator() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ListIterator listIterator(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public List subList(int fromIndex, int toIndex) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void add(int index, Note element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean add(Note e) {
-       return notes.add(e);
-    }
-
-    @Override
-    public Note set(int index, Note element) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Note remove(int index) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return notes.remove(o);
-    }
-}
-class Note {
-
-    /**
-     * @return the natValue
-     */
-    public String getNatValue() {
-        return natValue;
-    }
-
-    /**
-     * @return the midiEvent
-     */
-    public int getMidiEvent() {
-        return midiEvent;
-    }
-
-    /**
-     * @param midiEvent the midiEvent to set
-     */
-    public void setMidiEvent(int midiEvent) {
-        this.midiEvent = midiEvent;
-    }
-    
-    enum HalfStep
-    {
-        Undefined,
-        Sharp,
-        Flat;
-        
-        
-    }
-
-    enum NoteValue {
-        A(21),
-        B(23),
-        C(24),
-        D(26),
-        E(28),
-        F(29),
-        G(31);
-        private int midiEventVal;
-        private HalfStep halfStep = HalfStep.Undefined;
-
-        NoteValue(int val) {
-            this.midiEventVal = val;
-        }
-
-        public int getMidiNote() {
-            return this.midiEventVal;
-        }
-        public void setHalfStep( HalfStep newHalfStep )
-        {
-            this.halfStep = newHalfStep;
-        }
-        
-        public HalfStep getHalfStep()
-        {
-            return this.halfStep;
-        }
-    }
-
-    // Note is A octave 0 (A0) on PianoRoll
-    final private int baseMidiWholeNoteEvents[] = {21, 23, 24, 26, 28, 29, 31};
-    final private int baseMidiHalfNoteEvent[] = {22, 25, 27, 30};
-
-    private int myMidiNoteEventValue = -1;
-
-    private NoteValue myNoteValue = NoteValue.A;
-    private NoteValue myNatNoteValue = NoteValue.A;
-
-    final static private int baseMidiNoteEventMult = 12;
-
-    public Note(String value, int octave) {        
-        this.octave = octave;
-        this.parseNote(value);
-
-        this.value = value;
-        if (value.contains("b") )
-        {
-            this.natValue = value.split("b")[0];
-            this.setHalfNote();
-        }
-        else if (value.contains("#")) {  
-            this.natValue = value.split("#")[0];
-            this.setHalfNote();
-        } else {
-            this.natValue = value;
-            this.setWholeNote();
-        }
-
-    }
-
-    public NoteValue parseNote(String noteToParse) {
-        boolean isSharp = false;
-        boolean isFlat = false;
-
-        if (noteToParse.length() > 2) {
-            return null;
-        }
-        if (noteToParse.contains("b")) {
-            this.value = noteToParse.split("b")[0];
-            isFlat = true;
-            this.myNoteValue.setHalfStep(HalfStep.Flat);
-            this.setHalfNote();
-        } else if (noteToParse.contains("#")) {
-            this.value = noteToParse.split("#")[0];
-            this.myNoteValue.setHalfStep(HalfStep.Sharp);
-            isSharp = true;
-            this.setHalfNote();
-        } else {
-            this.value = noteToParse;
-            this.setWholeNote();
-        }
-
-        if (this.value.toUpperCase().equals("A")) {
-            myNoteValue = NoteValue.A;
-        } else if (this.value.toUpperCase().equals("B")) {
-            myNoteValue = NoteValue.B;
-        } else if (this.value.toUpperCase().equals("C")) {
-            myNoteValue = NoteValue.C;            
-        } else if (this.value.toUpperCase().equals("D")) {
-            myNoteValue = NoteValue.D;
-        } else if (this.value.toUpperCase().equals("E")) {
-            myNoteValue = NoteValue.E;
-        } else if (this.value.toUpperCase().equals("F")) {
-            myNoteValue = NoteValue.F;
-        } else if (this.value.toUpperCase().equals("G")) {
-            myNoteValue = NoteValue.G;
-        }
-        this.myMidiNoteEventValue = myNoteValue.getMidiNote();
-        if (isSharp) {
-            this.myMidiNoteEventValue++;
-        } else if (isFlat) {
-            this.myMidiNoteEventValue--;
-        }
-        this.calcMidiEvent();
-        return myNoteValue;
-    }
-
-    private boolean isWholeNote = false;
-    private boolean isHalfNote = false;
-    private String value;
-    private String natValue;
-    private int octave;
-    private int midiBaseValue; // the midi value based octave 0 (i.e. 21 = A0, 22 = Bb0, etc)
-    private int midiNote;
-    private int midiEvent;
-
-    /**
-     * @return the value
-     */
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * @param value the value to set
-     */
-    public void setValue(String value) {
-        this.value = value;
-        this.calcMidiEvent();
-    }
-
-    public NoteValue getNoteValue()
-    {
-        return this.myNoteValue;
-    }
-    
-    public void setNoteValue() {
-        this.parseNote(this.getValue());
-        this.calcMidiEvent();
-    }
-
-    public int getMidiNoteEventNumber() {
-        // return a midi number based on the current note
-        int midiNoteEventNumber = -1;
-
-        switch (myNoteValue) {
-            case A:
-                midiNoteEventNumber = NoteValue.A.getMidiNote();
-                break;
-            case B:
-                midiNoteEventNumber = NoteValue.B.getMidiNote();
-                break;
-            case C:
-                midiNoteEventNumber = NoteValue.C.getMidiNote();
-                break;
-            case D:
-                midiNoteEventNumber = NoteValue.D.getMidiNote();
-                break;
-            case E:
-                midiNoteEventNumber = NoteValue.E.getMidiNote();
-                break;
-            case F:
-                midiNoteEventNumber = NoteValue.F.getMidiNote();
-                break;
-            case G:
-                midiNoteEventNumber = NoteValue.G.getMidiNote();
-                break;
-        }
-        return midiNoteEventNumber;
-    }
-
-    private int calcMidiEvent() {
-        int octFactor = (12 * this.octave) - 12;
-        if( myNoteValue == null )
-            return -1;
-        int midiNoteResult = -1;
-        this.midiNote = getMidiNoteEventNumber();
-        midiNoteResult = this.getMidiNoteEventNumber();
-        if( isHalfNote && myNoteValue.getHalfStep().equals(HalfStep.Sharp))
-        {
-            midiNoteResult++;
-        }
-        else if( isHalfNote && myNoteValue.getHalfStep().equals(HalfStep.Flat))
-        {
-            midiNoteResult--;
-        }
-       
-        midiNoteResult = midiNoteResult + octFactor;
-        this.midiNote = midiNoteResult;
-        this.setMidiEvent(midiNoteResult);
-        return midiNoteResult;
-    }
-
-    public void setWholeNote() {
-        isWholeNote = true;
-        isHalfNote = false;
-    }
-
-    public boolean isHalfNote()
-    {
-        return this.isWholeNote;
-    }
-    public boolean isWholeNote()
-    {
-        return this.isWholeNote;
-    }
-    
-    public void setHalfNote() {
-        isWholeNote = false;
-        isHalfNote = true;
-    }
-
-    /**
-     * @return the octave
-     */
-    public int getOctave() {
-        return octave;
-    }
-
-    /**
-     * @param octave the octave to set
-     */
-    public void setOctave(int octave) {
-        this.octave = octave;
-    }
-
-    /**
-     * @return the midiNote
-     */
-    public int getMidiNote() {
-        return midiNote;
-    }
-
-    /**
-     * @param midiNote the midiNote to set
-     */
-    public void setMidiNote(int midiNote) {
-        this.midiNote = midiNote;
-        this.calcMidiEvent();
-    }
-
-}
-
-class MusicScale<Note> extends Stack<Note> {
-    public Note getRandomNoteInScale()
-    {
-        Note noteToRet = null;
-        
-        Random randomGenerator = new Random();
-        int randomInt = randomGenerator.nextInt(this.size());
-        noteToRet = this.get(randomInt);
-    
-        return noteToRet;
-    }
-    
-}
 
 class BruteForce implements Algorithm {
 
@@ -473,14 +33,14 @@ class BruteForce implements Algorithm {
             finalPassword[i] = "";
         }
         String pass = "GUEST";
-        
+
         String val = computePermutations(size, password, 0, pass);
        // System.out.println("Phrase = " + val );
         this.phrase.append(val);
         setPhrase(phrase);
 //return val;
         return computePermutations(size, password, 0, pass);
-        
+
     }
 
     private String computePermutations(int size, int[] password, int position, String pass) {
@@ -493,7 +53,7 @@ class BruteForce implements Algorithm {
             System.out.println("Iteration#" + iteration++ );
         }
         else{
-           iteration++; 
+           iteration++;
         }
         for (int i = 0; i < 36; i++) {
             password[position] = i;
@@ -767,11 +327,11 @@ public class PasswdCrackToMusic {
 
     int octaveOffSet = 1;
     static MusicScale<Note> scale = null;
-    
-    
+
+
     public PasswdCrackToMusic()
     {
-    
+
             scale = new MusicScale<>();
             scale.add(new Note("C", 1));
             scale.add(new Note("Eb", 1));
@@ -779,7 +339,7 @@ public class PasswdCrackToMusic {
             scale.add(new Note("Gb", 1));
             scale.add(new Note("G", 1));
             scale.add(new Note("Bb", 1));
-            scale.add(new Note("C", 1));        
+            scale.add(new Note("C", 1));
     }
     public static void main(String[] args) {
         BruteForce myBrute = new BruteForce();
@@ -790,7 +350,7 @@ public class PasswdCrackToMusic {
         System.out.println("Phrase is: " + out );
         myPhrase.printStack();
         System.out.println("Musical Phrase contains: " + myPhrase.size() + " notes");
-        MidiFile newMidiFile = new MidiFile();        
+        MidiFile newMidiFile = new MidiFile();
         Iterator<Note> notes = myPhrase.iterator();
         boolean salt = false; // used to mix up a repeating seqence of notes
         Note lastNoteSeen = null;
@@ -809,8 +369,8 @@ public class PasswdCrackToMusic {
             {
                 lastNoteSeen = note;
             }
-            
-                        
+
+
         }
         try
         {
@@ -826,12 +386,12 @@ public class PasswdCrackToMusic {
  // C - Eb - F - Gb - G - Bb - C "blues" scale
     public String toNote(char charToConvert) {
         String retVal = "#";
-       
+
        //  hexTonicScale.add(new Note("C", 1));
 
         PasswdCrackToMusic myCrack = new PasswdCrackToMusic();
 
-        // figure out the note based on the scale and the octave based on how 
+        // figure out the note based on the scale and the octave based on how
         // many times it "loops" though the scale to get the relative note
         int charPos = charRange.indexOf(charToConvert);
         int relativeNotePos = charPos % scale.size();
@@ -844,7 +404,7 @@ public class PasswdCrackToMusic {
         Note noteToSend = scale.elementAt(relativeNotePos);
         noteToSend.setOctave(relativeOctave + this.octaveOffSet );
         retVal = noteToSend.getValue() + ":" + noteToSend.getOctave() + "~";
-        
+
         //  C E G♯and E♭ G B
         // we are using a hexatonic (8 note) scale... so mod by 8 first
         return retVal;
